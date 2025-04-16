@@ -102,7 +102,7 @@ class ManagerServiceTest {
 
         long todoId = 1L;
         Todo todo = new Todo("Test Title", "Test Contents", "Sunny", user);
-
+        System.out.println(user.equals(todo.getUser()));
         long managerUserId = 2L;
         User managerUser = new User("b@b.com", "password", UserRole.USER);  // 매니저로 등록할 유저
         ReflectionTestUtils.setField(managerUser, "id", managerUserId);
