@@ -2,6 +2,7 @@ package org.example.expert.domain.user.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,9 +12,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserChangePasswordRequest {
 
-    @Pattern(regexp = "^[0-9A-Z]$")
+    @Size(min = 8)
+    @Pattern(regexp = "^[0-9A-Za-z]$")
     @NotBlank
     private String oldPassword;
+
+    @Size(min = 8)
+    @Pattern(regexp = "^[0-9A-Za-z]$")
     @NotBlank
     private String newPassword;
 }

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@Validated
 public class UserController {
 
     private final UserService userService;
@@ -23,7 +22,7 @@ public class UserController {
     }
 
     @PutMapping("/users")
-    public void changePassword(@Auth AuthUser authUser, @RequestBody UserChangePasswordRequest userChangePasswordRequest) {
+    public void changePassword(@Auth AuthUser authUser, @RequestBody @Validated UserChangePasswordRequest userChangePasswordRequest) {
         userService.changePassword(authUser.getId(), userChangePasswordRequest);
     }
 }
