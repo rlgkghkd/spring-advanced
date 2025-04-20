@@ -1,0 +1,165 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > LogAop</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.example.expert.config</a>
+</div>
+
+<h1>Coverage Summary for Class: LogAop (org.example.expert.config)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">LogAop</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    33.3%
+  </span>
+  <span class="absValue">
+    (1/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    5%
+  </span>
+  <span class="absValue">
+    (1/20)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.example.expert.config;
+&nbsp;
+&nbsp;import io.jsonwebtoken.Claims;
+&nbsp;import jakarta.servlet.http.HttpServletRequest;
+&nbsp;import jakarta.servlet.http.HttpServletResponse;
+&nbsp;import lombok.RequiredArgsConstructor;
+&nbsp;import lombok.extern.slf4j.Slf4j;
+&nbsp;import org.aspectj.lang.ProceedingJoinPoint;
+&nbsp;import org.aspectj.lang.annotation.Around;
+&nbsp;import org.aspectj.lang.annotation.Aspect;
+&nbsp;import org.aspectj.lang.annotation.Pointcut;
+&nbsp;import org.example.expert.domain.common.exception.InvalidRequestException;
+&nbsp;import org.example.expert.domain.user.dto.request.UserRoleChangeRequest;
+&nbsp;import org.example.expert.domain.user.entity.User;
+&nbsp;import org.example.expert.domain.user.repository.UserRepository;
+&nbsp;import org.springframework.stereotype.Component;
+&nbsp;import org.springframework.web.context.request.RequestContextHolder;
+&nbsp;import org.springframework.web.context.request.ServletRequestAttributes;
+&nbsp;
+&nbsp;import java.util.Date;
+&nbsp;
+<b class="fc">&nbsp;@Slf4j</b>
+&nbsp;@Aspect
+&nbsp;@Component
+&nbsp;@RequiredArgsConstructor
+&nbsp;public class LogAop {
+&nbsp;
+&nbsp;    private final JwtUtil jwtUtil;
+&nbsp;    private final UserRepository userRepository;
+&nbsp;
+&nbsp;    @Pointcut(&quot;execution(* org.example.expert.domain.user.controller.UserAdminController.changeUserRole(..))&quot;)
+<b class="nc">&nbsp;    private void cut(){}</b>
+&nbsp;
+&nbsp;    @Around(&quot;cut()&quot;)
+&nbsp;    public Object aroundLog(ProceedingJoinPoint joinPoint) throws  Throwable{
+<b class="nc">&nbsp;        Object [] args = joinPoint.getArgs();</b>
+&nbsp;        //HttpRequest 가 오는 경우, RequestContextListener.requestInitialized(ServletRequestEvent requestEvent) 함수에 의해 값이 전달되기 때문에 값을 받을 수 있다
+&nbsp;        //날 죽여라
+<b class="nc">&nbsp;        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();</b>
+<b class="nc">&nbsp;        HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getResponse();</b>
+&nbsp;
+<b class="nc">&nbsp;        String bearerJwt = request.getHeader(&quot;Authorization&quot;);</b>
+<b class="nc">&nbsp;        String jwt = jwtUtil.substringToken(bearerJwt);</b>
+<b class="nc">&nbsp;        Claims claims = jwtUtil.extractClaims(jwt);</b>
+<b class="nc">&nbsp;        String userMail = claims.get(&quot;email&quot;, String.class);</b>
+<b class="nc">&nbsp;        User user = userRepository.findByEmail(userMail).orElseThrow(() -&gt; new InvalidRequestException(&quot;가입되지 않은 유저입니다.&quot;));</b>
+&nbsp;
+<b class="nc">&nbsp;        log.info(&quot;commissioner id : {}&quot;, user.getId());</b>
+<b class="nc">&nbsp;        log.info(&quot;requested URL : {}&quot;, request.getRequestURI());</b>
+<b class="nc">&nbsp;        log.info(&quot;requested time : {}&quot;, new Date());</b>
+<b class="nc">&nbsp;        UserRoleChangeRequest dto = (UserRoleChangeRequest) args[args.length-1];</b>
+<b class="nc">&nbsp;        log.info(&quot;requested role : {}&quot;, dto.getRole());</b>
+<b class="nc">&nbsp;        Object returnObj = joinPoint.proceed();</b>
+&nbsp;
+<b class="nc">&nbsp;        log.info(&quot;respond time : {}&quot;, new Date());</b>
+<b class="nc">&nbsp;        log.info(&quot;return type = {}&quot;, returnObj.getClass().getSimpleName());</b>
+<b class="nc">&nbsp;        log.info(&quot;return value = {}&quot;, returnObj);</b>
+&nbsp;
+<b class="nc">&nbsp;        return returnObj;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-04-21 08:44</div>
+</div>
+</body>
+</html>

@@ -17,8 +17,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest
-
 class LogInterceptorTest {
 
     @Mock
